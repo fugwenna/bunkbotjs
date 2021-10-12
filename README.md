@@ -1,5 +1,5 @@
 # BunkbotJS
-The spiritual successor to [BunkBot](https://github.com/fugwenna/bunkbot)
+The spiritual successor to [Bunkbot](https://github.com/fugwenna/bunkbot)
 
 
 ![bunkbot](https://github.com/fugwenna/bunkbot/blob/master/avatar.png)
