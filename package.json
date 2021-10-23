@@ -1,0 +1,36 @@
+{
+  "name": "bunkbotjs",
+  "version": "0.1.0",
+  "description": "The bunkest of bots",
+  "main": "dist/index.js",
+  "scripts": {
+    "setup": "npm i && npx tsc && node dist/tools/setup.js",
+    "config": "node dist/tools/setup.js",
+    "export": "node -e 'require(\"./dist/tools/sync.js\").export()'",
+    "load": "node -e 'require(\"./dist/tools/sync.js\").load(\"./db.json\")'"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fugwenna/bunkbotjs.git"
+  },
+  "keywords": [
+    "discord",
+    "bot",
+    "bunkbot"
+  ],
+  "author": "fugwenna",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/fugwenna/bunkbotjs/issues"
+  },
+  "homepage": "https://github.com/fugwenna/bunkbotjs#readme",
+  "dependencies": {
+    "colors": "^1.4.0",
+    "discord.js": "^13.2.0",
+    "pouchdb": "^7.2.2",
+    "typescript": "^4.4.4"
+  },
+  "devDependencies": {
+    "@types/pouchdb": "^6.4.0"
+  }
+}

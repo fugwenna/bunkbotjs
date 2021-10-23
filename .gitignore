@@ -1,0 +1,6 @@
+dist/*
+node_modules/*
+**/*.js
+db.json
+config.json
+database/*
