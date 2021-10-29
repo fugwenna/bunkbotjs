@@ -2,5 +2,6 @@ dist/*
 node_modules/*
 **/*.js
 db.json
+tinydb.json
 config.json
 database/*

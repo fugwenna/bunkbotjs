@@ -1,6 +1,8 @@
 import * as fs from "fs";
 import * as path from "path";
 
+import { ICommand } from "../core/command";
+
 /**
  * Read the contents of a JSON file
  * into a known type T
@@ -32,4 +34,31 @@ export const writeJSONFile = <T>(filePath: string, contents: T): void => {
         fs.mkdirSync(dir);
 
     fs.writeFileSync(filePath, stringifiedContents);
+}
+
+/**
+ * Loop over the src root directory and retrieve any files 
+ * that end in `_command.ts` and export a default command object
+ * 
+ * @param {string} filePath - root file path of the bot
+ * @returns a list of valid commands
+ */
+export const getCommandFiles = (filePath: string): ICommand[] => {
+    const contents = fs.readdirSync(filePath);
+
+    const getCommands = (dir: string[]): ICommand[] => {
+        const commands = [];
+
+        dir.forEach(dof => {
+            if (fs.statSync(dof).isDirectory) {
+
+            } else {
+
+            }
+        });
+
+        return commands;
+    };
+
+    return getCommands(contents);
 }

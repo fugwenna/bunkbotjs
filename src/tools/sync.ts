@@ -1,4 +1,4 @@
-import { exportDocumentsAsync, loadDatabaseSync } from "../db/index";
+import { exportDocumentsAsync, loadDatabaseSync } from "../db";
 
 module.exports = {
     export: () => exportDocumentsAsync(),

@@ -1,7 +1,7 @@
 import * as fs from "fs";
 import PouchDB from "pouchdb"
 
-import { IDocument, IBotServerConfigDocument, IExportedDatabaseDocument } from "./documents.interface";
+import { IDocument, IBotServerConfigDocument, IExportedDatabaseDocument } from "./documents";
 import { readJSONFile, writeJSONFile } from "../tools/filesystem";
 import { logError, logSuccess, logInfo } from "./log";
 
@@ -78,20 +78,18 @@ export const closeDatabaseAsync = async(): Promise<void> => {
  * 
  * @returns mapped document model T
  */
-export const getDocByKeyAsync = async<T extends IDocument>(key: string, 
-    modelToCreate: T = null): Promise<T> => {
-
+export const getDocByKeyAsync = async<T extends IDocument>(key: string, modelToCreate: T = null): Promise<T> => {
     try {
         const doc = await POUCHDB_DATABASE_REF.get(key, {
             revs: true
         });
 
         return <any>doc as T;
-    } catch (e: any | unknown) {
+    } catch (e) {
         if (e.status == 404 && !!modelToCreate) {
             return await saveDocumentAsync(key, modelToCreate, true);
         } else {
-            logError(`Error retrieving document: ${e}`); 
+            throw e;
         }
     }
 }
@@ -103,26 +101,22 @@ export const getDocByKeyAsync = async<T extends IDocument>(key: string,
  * 
  * @param {string} key document key to set
  * @param {T} model document model to save
- * @param {boolean} [fromGet=false] do not attached to refetch if it's from the get method
+ * @param {boolean} [fromGet=false] do not attempt to refetch if it's from the get method
  */
 export const saveDocumentAsync = async<T extends IDocument>(key: string, model: T,
     fromGet: boolean = false): Promise<T> => {
 
-    try {
-        model._id = key;
+    model._id = key;
 
-        if (!model._rev && !fromGet) {
-            const ref = await getDocByKeyAsync(key);
-            if (ref?._rev)
-                model._rev = ref._rev;
-        }
-
-        await POUCHDB_DATABASE_REF.put(model);
-
-        return model;
-    } catch (e: any | unknown) {
-        logError(`Error saving document: ${e}`);
+    if (!model._rev && !fromGet) {
+        const ref = await getDocByKeyAsync(key);
+        if (ref?._rev)
+            model._rev = ref._rev;
     }
+
+    await POUCHDB_DATABASE_REF.put(model);
+
+    return model;
 }
 
 /**
@@ -161,8 +155,8 @@ export const exportDocumentsAsync = async(closeConnection: boolean = true, copyO
         });
 
         makeBackupDbFile(dbObject, copyOnly);
-    } catch(e: any|unknown) {
-        logError(e);
+    } catch(e) {
+        throw e;
     } finally {
         if (closeConnection)
             await closeDatabaseAsync();
@@ -202,7 +196,7 @@ export const loadDatabaseSync = async(filePath: string): Promise<void> => {
 
         await dbFile.servers?.forEach(server => saveDocumentAsync(server._id, server, true));
         await exportDocumentsAsync(false, true); // save the copy 
-    } catch (e: any | unknown) {
+    } catch (e) {
         logError(e);
     } finally {
         await closeDatabaseAsync();

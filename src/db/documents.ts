@@ -73,6 +73,7 @@ export interface IBotChannelDocument extends IDocument {
  */
 export interface IBotServerConfigDocument extends ITokenDocument {
     isServerConfig: boolean, // always true (for query)
+    isDefaultServer?: boolean; // optional
     roles?: IBotRoleDocument,
     channels?: IBotChannelDocument
 }

@@ -1,1 +1,1 @@
-export { readJSONFile, writeJSONFile } from "./filesystem";
+export * from "./filesystem";

@@ -5,7 +5,7 @@ import {
     DOC_CONFIG, DOC_GAMES, logSuccess, logWarning, logError, logInfo,
     ITokenDocument, IBotCoreConfigDocument, IBotServerConfigDocument, IBotGamesDocument,
     getDocByKeyAsync, saveDocumentAsync, initializeDatabaseAsync, closeDatabaseAsync, printAllDocsAsync, 
-} from "../db/index";
+} from "../db";
 
 const IO = readline.createInterface({
     input: process.stdin,
@@ -34,9 +34,9 @@ const configureDiscordTokenAsync = async(): Promise<void> => {
         tokens: {}
     });
 
-    if (config) {
+    if (config?.discordDevToken != "") {
         logWarning("Discord dev token already exists!");
-        logInfo(`To modify the dev token, run ${"npm export".green} to manually change it, and reload with ${"npm run load".green}\n`);
+        logInfo(`To modify the dev token, run ${"npm run export".green} to manually change it, and reload with ${"npm run load".green}\n`);
     } else {
         const msg = "Enter Discord dev token: ";
         const discordToken = await getUserInputAsync(msg);
@@ -217,7 +217,7 @@ export const main = async(): Promise<void> => {
     try {
         await initializeDatabaseAsync();
         await configureDatabaseAsync();
-    } catch (e: any|unknown) {
+    } catch (e) {
         logError(e);
     } finally {
         await closeDatabaseAsync();
