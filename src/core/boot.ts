@@ -74,8 +74,7 @@ export const registerCacheAndCommandsAsync = async(client: Client): Promise<void
 /**
  * Register application wide slash commands
  * 
- * @param server
- * @param client 
+ * @param {IServer} server - server which to register commands
  */
 const registerCommandsAsync = async(server: IServer) => {
     const doc = await getDocByKeyAsync<IBotCoreConfigDocument>(DOC_CONFIG);
