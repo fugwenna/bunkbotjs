@@ -46,10 +46,10 @@ module.exports = {
         .setDescription("Manage the color of your user in the server")
         .addSubcommand(x => x
 			.setName(ColorSubCommand.Set)
-			.setDescription("Set your color value"))
+			.setDescription("Set your personal color"))
         .addSubcommand(x => x
 			.setName(ColorSubCommand.Clear)
-			.setDescription("Clear your color value")),
+			.setDescription("Clear your personal color")),
 
     async execute(interaction: any) {
         await colorAsync(interaction);
