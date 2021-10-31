@@ -10,7 +10,7 @@
  * servers (or guilds), as well as act as a primary event handler for various discord events.
  */
 import { Client, Intents } from "discord.js";
-import { logInfoAsync } from "./channel";
+import { logInfoAsync, logServerErrorAsync } from "./channel";
 import { logError } from "./db";
 import { 
     bootAsync, DiscordEvents, EMOJI_ROBOT, 
@@ -41,7 +41,7 @@ client.on(DiscordEvents.Interaction, async(interaction) => {
     try {
         await handleInteractionAsync(interaction);
     } catch(e) {
-
+        await logServerErrorAsync(interaction.guildId, e);
     }
 });
 

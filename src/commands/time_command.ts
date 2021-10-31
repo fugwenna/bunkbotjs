@@ -1,7 +1,6 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
 
-import { logErrorAsync } from "../channel";
-import { getServerById } from "../core";
+import { logServerErrorAsync } from "../channel";
 
 /**
  * @description
@@ -16,7 +15,7 @@ const timeAsync = async(interaction: any): Promise<void> => {
 
         await interaction.reply(time);
     } catch (e) {
-        await logErrorAsync(getServerById(interaction.guildId), e);
+        await logServerErrorAsync(interaction.guildId, e);
     }
 }
 

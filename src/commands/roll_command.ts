@@ -1,8 +1,7 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
 import { Message, MessageEmbed } from "discord.js";
 
-import { logErrorAsync } from "../channel"
-import { getServerById } from "../core"
+import { logServerErrorAsync } from "../channel"
 import { getRandomNumber } from "../tools";
 
 /**
@@ -17,11 +16,11 @@ const rollAsync = async(interaction: Message): Promise<void> => {
         const embed = new MessageEmbed()
             .setColor(interaction.member.displayColor)
             .setTitle(`Rolling (${min}-${max})`)
-            .setDescription(`${interaction.member?.displayName} rolls: ${result}`)
+            .setDescription(`${interaction.member?.displayName} rolls: ${result}`);
 
         await interaction.reply({ embeds: [embed] });
     } catch (e) {
-        await logErrorAsync(getServerById(interaction.guildId), e);
+        await logServerErrorAsync(interaction.guildId, e);
     }
 }
 

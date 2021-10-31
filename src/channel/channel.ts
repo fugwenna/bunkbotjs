@@ -4,7 +4,7 @@
  * sending logs to a configured channel 
  */
 import { GuildChannel } from "discord.js";
-import { EMOJI_EXCLAMATION, IServer } from "../core";
+import { EMOJI_EXCLAMATION, getServerById, IServer } from "../core";
 import { logError } from "../db";
 
 /**
@@ -76,4 +76,14 @@ export const logErrorAsync = async(server: IServer, msg: string): Promise<void> 
         logError(`Unable to log error to server ${server?.id} - ${msg}`);
         logError(e);
     }
+}
+
+/**
+ * Log an error to a configured server for 
+ * 
+ * @param {IServer} serverId - server id which to log error
+ * @param {string} msg - error message to log
+ */
+export const logServerErrorAsync = async(serverId: string, msg: string): Promise<void> => {
+    await logErrorAsync(getServerById(serverId),msg);
 }

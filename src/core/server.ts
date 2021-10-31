@@ -22,9 +22,7 @@ export interface IServer {
  * Fake server "cache" for quick lookup
  * and will store references by server id
  */
-const SERVER_CACHE: { [serverId: string]: IServer } = { 
-
-};
+const SERVER_CACHE: { [serverId: string]: IServer } = { };
 
 /**
  * Upon boot, collect a reference to a discord guild into "cache"
