@@ -57,3 +57,16 @@ export const getDefaultServer = (): IServer => {
 
     return SERVER_CACHE[srv?._id];
 }
+
+/**
+ * Get the "default" core server (if it exists) 
+ * 
+ * @returns - Optionally configured default server
+ */
+export const getServerById = (serverId: string): IServer => {
+    const srv = Object.keys(SERVER_CACHE)
+        .map(k => SERVER_CACHE[k].config)
+        .find(s => s._id == serverId);
+
+    return SERVER_CACHE[srv?._id];
+}

@@ -4,7 +4,7 @@
  * sending logs to a configured channel 
  */
 import { GuildChannel } from "discord.js";
-import { IServer } from "../core";
+import { EMOJI_EXCLAMATION, IServer } from "../core";
 import { logError } from "../db";
 
 /**
@@ -67,6 +67,7 @@ export const logInfoAsync = async(server: IServer, msg: string): Promise<void> =
  */
 export const logErrorAsync = async(server: IServer, msg: string): Promise<void> => {
     try {
+        msg = `${EMOJI_EXCLAMATION} ${msg}`;
         const logged = await sendToChannelAsync(server, server.config?.channels.log, msg);
 
         if (!logged)

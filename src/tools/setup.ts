@@ -30,6 +30,7 @@ const configureDatabaseAsync = async(): Promise<void> => {
 
 const configureDiscordTokenAsync = async(): Promise<void> => {
     const config: IBotCoreConfigDocument = await getDocByKeyAsync<IBotCoreConfigDocument>(DOC_CONFIG, {
+        clientId: "",
         discordDevToken: "",
         tokens: {}
     });
@@ -40,9 +41,11 @@ const configureDiscordTokenAsync = async(): Promise<void> => {
     } else {
         const msg = "Enter Discord dev token: ";
         const discordToken = await getUserInputAsync(msg);
+        const clientId = await getUserInputAsync("Enter bot client id: ");
 
         if (discordToken && discordToken.trim() != "") {
             await saveDocumentAsync<IBotCoreConfigDocument>(DOC_CONFIG, {
+                clientId: clientId,
                 discordDevToken: discordToken,
                 tokens: config.tokens
             });

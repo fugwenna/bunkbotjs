@@ -4,19 +4,18 @@
  * bootstrapping the bot and registering all commands and 
  * server/guild configuration at the time of load
  */
-import { SlashCommandBuilder } from "@discordjs/builders";
 import { REST } from "@discordjs/rest";
-import { Routes } from "discord-api-types";
+import { Routes } from "discord-api-types/v9";
 import { Client, Collection, OAuth2Guild } from "discord.js";
 
-import { collectServer } from "./server";
+import { collectServer, IServer } from "./server";
 import { 
     DOC_CONFIG, IBotCoreConfigDocument, 
     initializeDatabaseAsync, getDocByKeyAsync, 
-    logInfo, logError 
+    logInfo, logError, logSuccess 
 } from "../db";
+import { getCommandFiles } from "../core";
 import { logErrorAsync } from "../channel/channel";
-import { getCommandFiles } from "../tools";
 
 type GuildCollection = Collection<string, OAuth2Guild>;
 
@@ -36,16 +35,13 @@ export const bootAsync = async(client: Client): Promise<void> => {
 }
 
 /**
- * Once the bot has officially been booted and calls it's 
+ * Once the bot has officially been booted and calls it"s 
  * ready event, register all (slash) commands and load server configuration
  * into the "in-mem cache" object to reduce hits on the db
  * 
  * @param {Client} client - Discord client instance
  */
 export const registerCacheAndCommandsAsync = async(client: Client): Promise<void> => {
-    // TODO - will want to loop over directories for .command files to load
-    //const commandFiles = getCommandFiles();
-
     try {
         const guilds: GuildCollection = await client.guilds.fetch();
         const serverLength = client.guilds.cache.size;
@@ -60,6 +56,7 @@ export const registerCacheAndCommandsAsync = async(client: Client): Promise<void
             try {
                 if (index < serverLength) {
                     server.config = await getDocByKeyAsync(serverId);
+                    await registerCommandsAsync(server);
                     await resolveFnAsync(guilds, index + 1);
                 }
             } catch (e) {
@@ -72,4 +69,37 @@ export const registerCacheAndCommandsAsync = async(client: Client): Promise<void
     } catch (e) {
         throw e;
     }
+}
+
+/**
+ * Register application wide slash commands
+ * 
+ * @param server
+ * @param client 
+ */
+const registerCommandsAsync = async(server: IServer) => {
+    const doc = await getDocByKeyAsync<IBotCoreConfigDocument>(DOC_CONFIG);
+    const commandFiles = getCommandFiles("./dist/commands", server.clientRef);
+
+
+    (async () => {
+        try {
+            logInfo("Started refreshing application (/) commands");
+            const rest = new REST({ version: "9" }).setToken(doc.discordDevToken);
+    
+            await rest.put(
+                Routes.applicationGuildCommands(doc.clientId, server.id),
+                { body: commandFiles.map(c => c.data.toJSON()) },
+            );
+
+            //await rest.put(
+            //    Routes.applicationCommands(doc.clientId),
+            //    { body: [] },
+            //);
+    
+            logSuccess("Successfully reloaded application (/) commands");
+        } catch (error) {
+            logError(`registerCommandsAsync: ${error}`);
+        }
+    })();
 }

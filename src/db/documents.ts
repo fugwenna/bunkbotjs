@@ -21,6 +21,7 @@ export interface ITokenDocument extends IDocument {
  */
 export interface IBotCoreConfigDocument extends ITokenDocument {
     discordDevToken: string;
+    clientId: string;
 }
 
 /**

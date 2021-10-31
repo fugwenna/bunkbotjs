@@ -11,10 +11,10 @@
  */
 import { Client, Intents } from "discord.js";
 import { logInfoAsync } from "./channel";
-import { logError, logSuccess } from "./db";
+import { logError } from "./db";
 import { 
     bootAsync, DiscordEvents, EMOJI_ROBOT, 
-    getDefaultServer, registerCacheAndCommandsAsync 
+    getDefaultServer, handleInteractionAsync, registerCacheAndCommandsAsync 
 } from "./core";
 
 const client: Client = new Client({ 
@@ -30,11 +30,18 @@ const client: Client = new Client({
 client.once(DiscordEvents.Ready, () => {
     try {
         registerCacheAndCommandsAsync(client).then(() => {
-            logInfoAsync(getDefaultServer(), `${EMOJI_ROBOT} Bot loaded ${EMOJI_ROBOT}`);
-            logSuccess("Bunkbot loaded!");
+            //logInfoAsync(getDefaultServer(), `${EMOJI_ROBOT} Bot loaded ${EMOJI_ROBOT}`);
         });
     } catch(e) {
         logError(`Error registering servers: ${e}`);
+    }
+});
+
+client.on(DiscordEvents.Interaction, async(interaction) => {
+    try {
+        await handleInteractionAsync(interaction);
+    } catch(e) {
+
     }
 });
 
