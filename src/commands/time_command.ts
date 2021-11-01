@@ -1,6 +1,6 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
 
-import { logServerErrorAsync } from "../channel";
+import { logServerErrorAsync } from "../core";
 
 /**
  * @description

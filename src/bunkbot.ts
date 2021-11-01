@@ -10,11 +10,11 @@
  * servers (or guilds), as well as act as a primary event handler for various discord events.
  */
 import { Client, Intents } from "discord.js";
-import { logInfoAsync, logServerErrorAsync } from "./channel";
 import { logError } from "./db";
 import { 
     bootAsync, DiscordEvents, EMOJI_ROBOT, 
-    getDefaultServer, handleInteractionAsync, registerCacheAndCommandsAsync 
+    getDefaultServer, handleInteractionAsync, 
+    logInfoAsync, logServerErrorAsync, registerCacheAndCommandsAsync 
 } from "./core";
 
 const client: Client = new Client({ 

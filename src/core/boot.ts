@@ -14,8 +14,8 @@ import {
     initializeDatabaseAsync, getDocByKeyAsync, 
     logInfo, logError, logSuccess 
 } from "../db";
-import { getCommandFiles } from "../core";
-import { logErrorAsync } from "../channel/channel";
+import { logErrorAsync } from "./channel";
+import { getCommandFiles } from "./command";
 
 type GuildCollection = Collection<string, OAuth2Guild>;
 

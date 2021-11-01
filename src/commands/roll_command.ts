@@ -1,7 +1,7 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
 import { Message, MessageEmbed } from "discord.js";
 
-import { logServerErrorAsync } from "../channel"
+import { logServerErrorAsync } from "../core"
 import { getRandomNumber } from "../tools";
 
 /**

@@ -4,7 +4,8 @@
  * sending logs to a configured channel 
  */
 import { GuildChannel } from "discord.js";
-import { EMOJI_EXCLAMATION, getServerById, IServer } from "../core";
+import { EMOJI_EXCLAMATION } from "./constants";
+import { getServerById, IServer } from "./server";
 import { logError } from "../db";
 
 /**

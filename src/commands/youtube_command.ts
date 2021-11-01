@@ -3,8 +3,7 @@ import { Interaction, Message, MessageActionRow, MessageSelectMenu, MessageSelec
 import { GaxiosResponse } from "gaxios";
 import { google, youtube_v3 } from "googleapis";
 
-import { logServerErrorAsync } from "../channel";
-import { getServerApiTokenAsync, TOKEN_YOUTUBE_API } from "../core";
+import { getServerApiTokenAsync, logServerErrorAsync, TOKEN_YOUTUBE_API } from "../core";
 
 const YT_WATCH_URL: string = "https://www.youtube.com/watch?v="
 
