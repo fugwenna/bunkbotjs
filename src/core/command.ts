@@ -66,10 +66,7 @@ export const getCommandFiles = (filePath: string, client: any): ICommand[] => {
 export const handleInteractionAsync = async(interaction: Interaction): Promise<void> => {
     if (interaction.isSelectMenu()) {
         // TODO .. link back to youtube video somehow.. message id?
-    } else {
-        if (!interaction.isCommand())
-            return;
-
+    } else if (interaction.isCommand()) {
         const commandRef = (<any>interaction.client)
             .commands?.get(interaction.commandName);
 
