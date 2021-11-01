@@ -83,7 +83,6 @@ const registerCommandsAsync = async(server: IServer) => {
 
     (async () => {
         try {
-            logInfo("Started refreshing application (/) commands");
             const rest = new REST({ version: "9" }).setToken(doc.discordDevToken);
     
             await rest.put(

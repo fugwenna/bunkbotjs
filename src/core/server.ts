@@ -5,7 +5,7 @@
  * functions can just pull the instance off of a singleton object
  */
 import { Client } from "discord.js";
-import { IBotServerConfigDocument } from "../db";
+import { DOC_CONFIG, getDocByKeyAsync, IBotCoreConfigDocument, IBotServerConfigDocument } from "../db";
 
 /**
  * Interface that represents a 
@@ -67,4 +67,24 @@ export const getServerById = (serverId: string): IServer => {
         .find(s => s._id == serverId);
 
     return SERVER_CACHE[srv?._id];
+}
+
+/**
+ * Retrieve an API token for a given server (e.g. youtube API token). If
+ * the server has not defined the API token for itself, check the core 
+ * config document and use that token instead
+ * 
+ * @param {string} serverId - server which to retrieve token (if exists)
+ * @param {string} tokenName - API token which to retrieve for a given command
+ * @returns pre-configured API token 
+ */
+export const getServerApiTokenAsync = async(serverId: string, tokenName: string): Promise<string> => {
+    const server = getServerById(serverId);
+    const serverToken = server?.config.tokens[tokenName];
+
+    if (serverToken)
+        return serverToken;
+
+    const config = await getDocByKeyAsync<IBotCoreConfigDocument>(DOC_CONFIG);
+    return config.tokens[tokenName];
 }

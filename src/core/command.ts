@@ -64,6 +64,10 @@ export const getCommandFiles = (filePath: string, client: any): ICommand[] => {
  * @param {Interaction} interaction - interaction to handle
  */
 export const handleInteractionAsync = async(interaction: Interaction): Promise<void> => {
+    if (interaction.isSelectMenu()) {
+        // TODO .. link back to youtube video somehow.. message id?
+    }
+
     if (!interaction.isCommand())
         return;
 
