@@ -80,7 +80,7 @@ const registerCommandsAsync = async(server: IServer) => {
     const doc = await getDocByKeyAsync<IBotCoreConfigDocument>(DOC_CONFIG);
     const commandFiles = getCommandFiles("./dist/commands", server.clientRef);
 
-
+    // TODO - do I need this closure?
     (async () => {
         try {
             const rest = new REST({ version: "9" }).setToken(doc.discordDevToken);
