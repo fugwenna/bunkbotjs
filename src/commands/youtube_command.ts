@@ -6,10 +6,13 @@ import { google, youtube_v3 } from "googleapis";
 import { getServerApiTokenAsync, logServerErrorAsync, TOKEN_YOUTUBE_API } from "../core";
 
 const YT_WATCH_URL: string = "https://www.youtube.com/watch?v="
+const YT_VIDEO_MESSAGE_CACHE: string[] = []; // used to store message ids for editing
 
 /**
- * 
- * @param interaction 
+ * @description
+ * Allow users to quick search for a youtube video using a required keyword(s). The
+ * message reference will then be stored in another fake cache so that event handling
+ * for select menus can re-link other videos to the original message
  */
 export const getYoutubeVideosAsync = async(interaction: Message|Interaction): Promise<void> => {
     try {
@@ -34,6 +37,8 @@ export const getYoutubeVideosAsync = async(interaction: Message|Interaction): Pr
                 content: `${YT_WATCH_URL}${result.data.items[0].id.videoId}`,
                 components: [createOtherVideoMenu(result)]
             });
+
+            //YT_VIDEO_MESSAGE_CACHE.push(msg.id);
         }
     } catch (e) {
         await logServerErrorAsync(interaction.guildId, e)
@@ -57,7 +62,7 @@ const createOtherVideoMenu = (result: GaxiosResponse<youtube_v3.Schema$SearchLis
         options.push({
             label: item.snippet.title,
             description: description,
-            value: item.id.videoId
+            value: `${YT_WATCH_URL}${item.id.videoId}`
         });
     });
 
