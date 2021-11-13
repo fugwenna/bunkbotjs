@@ -14,7 +14,8 @@ import { logError } from "./db";
 import { 
     bootAsync, DiscordEvents, EMOJI_ROBOT, 
     getDefaultServer, handleInteractionAsync, 
-    logInfoAsync, logServerErrorAsync, registerCacheAndCommandsAsync 
+    logInfoAsync, logServerErrorAsync, 
+    registerCacheAndCommandsAsync 
 } from "./core";
 
 const client: Client = new Client({ 

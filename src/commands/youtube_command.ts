@@ -38,6 +38,8 @@ export const getYoutubeVideosAsync = async(interaction: Message|Interaction): Pr
                 components: [createOtherVideoMenu(result)]
             });
 
+            // this should.. probably go into database
+            // for restarts? .. idk
             //YT_VIDEO_MESSAGE_CACHE.push(msg.id);
         }
     } catch (e) {
