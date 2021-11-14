@@ -65,7 +65,9 @@ export const getCommandFiles = (filePath: string, client: any): ICommand[] => {
  */
 export const handleInteractionAsync = async(interaction: Interaction): Promise<void> => {
     if (interaction.isSelectMenu()) {
-        // TODO .. eventually something event-driven 
+        console.log(interaction.id);
+        await interaction.reply("hello");
+
     } else if (interaction.isCommand()) {
         const commandRef = (<any>interaction.client)
             .commands?.get(interaction.commandName);

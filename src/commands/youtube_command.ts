@@ -25,6 +25,8 @@ export const getYoutubeVideosAsync = async(interaction: Message|Interaction): Pr
             auth: ytToken
         });
 
+        console.log("tst", interaction.id)
+
         const result = await youtube.search.list({
             part: ["id", "snippet"],
             q: query,

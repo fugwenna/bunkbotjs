@@ -80,24 +80,21 @@ const registerCommandsAsync = async(server: IServer) => {
     const doc = await getDocByKeyAsync<IBotCoreConfigDocument>(DOC_CONFIG);
     const commandFiles = getCommandFiles("./dist/commands", server.clientRef);
 
-    // TODO - do I need this closure?
-    (async () => {
-        try {
-            const rest = new REST({ version: "9" }).setToken(doc.discordDevToken);
+    try {
+        const rest = new REST({ version: "9" }).setToken(doc.discordDevToken);
     
-            await rest.put(
-                Routes.applicationGuildCommands(doc.clientId, server.id),
-                { body: commandFiles.map(c => c.data.toJSON()) },
-            );
+        await rest.put(
+            Routes.applicationGuildCommands(doc.clientId, server.id),
+            { body: commandFiles.map(c => c.data.toJSON()) },
+        );
 
-            //await rest.put(
-            //    Routes.applicationCommands(doc.clientId),
-            //    { body: [] },
-            //);
+        //await rest.put(
+        //    Routes.applicationCommands(doc.clientId),
+        //    { body: [] },
+        //);
     
-            logSuccess("Successfully reloaded application (/) commands");
-        } catch (error) {
-            logError(`registerCommandsAsync: ${error}`);
-        }
-    })();
+        logSuccess("Successfully reloaded application (/) commands");
+    } catch (error) {
+        logError(`registerCommandsAsync: ${error}`);
+    }
 }
