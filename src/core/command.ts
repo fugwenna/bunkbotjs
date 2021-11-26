@@ -5,7 +5,7 @@
 import * as fs from "fs"
 import * as path from "path";
 import colors from "colors";
-import { Collection, Interaction } from "discord.js";
+import { Collection, Interaction, Message } from "discord.js";
 
 import { logInfo } from "../db";
 
@@ -65,9 +65,14 @@ export const getCommandFiles = (filePath: string, client: any): ICommand[] => {
  */
 export const handleInteractionAsync = async(interaction: Interaction): Promise<void> => {
     if (interaction.isSelectMenu()) {
-        console.log(interaction.id);
-        await interaction.reply("hello");
-
+        // at this time, the only select menu
+        // we are dealing with is selecting another
+        // youtube video, so this might not be a 
+        // blanket solution in the future
+        const msg = <Message>interaction.message;
+        const value = interaction.values[0];
+        await msg.edit(value);
+        await interaction.update({ content: value });
     } else if (interaction.isCommand()) {
         const commandRef = (<any>interaction.client)
             .commands?.get(interaction.commandName);

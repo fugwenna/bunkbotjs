@@ -93,7 +93,7 @@ const registerCommandsAsync = async(server: IServer) => {
         //    { body: [] },
         //);
     
-        logSuccess("Successfully reloaded application (/) commands");
+        logSuccess("\nSuccessfully reloaded application (/) commands");
     } catch (error) {
         logError(`registerCommandsAsync: ${error}`);
     }

@@ -1,4 +1,5 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
+import { CommandInteraction } from "discord.js";
 
 enum ColorSubCommand {
     Set = "set",
@@ -11,12 +12,12 @@ enum ColorSubCommand {
  * Manage a color role for all members, giving the ability
  * to list hex values
  */
-const colorAsync = async(interaction: any): Promise<void> => {
+const colorAsync = async(interaction: CommandInteraction): Promise<void> => {
     const subc = interaction.options.getSubcommand();
 
     switch (subc) {
         case ColorSubCommand.Set:
-            await setMemberColorRoleAsync(interaction, interaction.content);
+            //await setMemberColorRoleAsync(interaction, interaction.content);
             break;
 
         case ColorSubCommand.Clear:
@@ -36,7 +37,7 @@ const colorAsync = async(interaction: any): Promise<void> => {
  * @param {Interaction} interaction - interaction which triggered the command
  * @param {string} color - color the user has entered
  */
-const setMemberColorRoleAsync = async(interaction: any, color: string): Promise<void> => {
+const setMemberColorRoleAsync = async(interaction: CommandInteraction, color: string): Promise<void> => {
     console.log(color)
 }
 

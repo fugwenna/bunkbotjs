@@ -26,7 +26,7 @@ Many of Bunkbot's features use (free) API accounts. Bunkbot will still load with
 ## Setup
 Running Bunkbot's setup will provide a pouch `database/` directory at the root of the project. You may opt for defaults and come back to change configuration later using the setup scripts.
 
-For first time setup, open your desired terminal and run::
+For first time setup, open your desired terminal and run:
 ```bash
 npm run setup
 ```

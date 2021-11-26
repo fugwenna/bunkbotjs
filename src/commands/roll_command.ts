@@ -1,5 +1,5 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
-import { Message, MessageEmbed } from "discord.js";
+import { CommandInteraction, MessageEmbed } from "discord.js";
 
 import { logServerErrorAsync } from "../core"
 import { getRandomNumber } from "../tools";
@@ -8,15 +8,17 @@ import { getRandomNumber } from "../tools";
  * @description
  * Roll command registered as /roll [range]
  */
-const rollAsync = async(interaction: Message): Promise<void> => {
+const rollAsync = async(interaction: CommandInteraction): Promise<void> => {
     try {
-        const min = (<any>interaction).options.getInteger("min") ?? 1;
-        const max = (<any>interaction).options.getInteger("max") ?? 100;
+        const min = interaction.options.getInteger("min");
+        const max = interaction.options.getInteger("max");
         const result = getRandomNumber(min, max);
+        const member = <any>interaction.member;
+
         const embed = new MessageEmbed()
-            .setColor(interaction.member.displayColor)
+            .setColor(member.displayColor)
             .setTitle(`Rolling (${min}-${max})`)
-            .setDescription(`${interaction.member?.displayName} rolls: ${result}`);
+            .setDescription(`${member.displayName} rolls: ${result}`);
 
         await interaction.reply({ embeds: [embed] });
     } catch (e) {
@@ -35,7 +37,7 @@ module.exports = {
             .setName("max")
             .setDescription("Enter a maximum")),
 
-    async execute(interaction: Message) {
+    async execute(interaction: CommandInteraction) {
         await rollAsync(interaction);
     }
 }
