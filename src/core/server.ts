@@ -4,7 +4,7 @@
  * that holds a reference to the discord client so that other
  * functions can just pull the instance off of a singleton object
  */
-import { Client } from "discord.js";
+import { Client, OAuth2Guild } from "discord.js";
 import { DOC_CONFIG, getDocByKeyAsync, IBotCoreConfigDocument, IBotServerConfigDocument } from "../db";
 
 /**
@@ -15,6 +15,7 @@ import { DOC_CONFIG, getDocByKeyAsync, IBotCoreConfigDocument, IBotServerConfigD
 export interface IServer {
     id: string;
     clientRef: Client;
+    guild: OAuth2Guild;
     config?: IBotServerConfigDocument;
 }
 
@@ -27,20 +28,21 @@ const SERVER_CACHE: { [serverId: string]: IServer } = { };
 /**
  * Upon boot, collect a reference to a discord guild into "cache"
  * 
- * @param serverId - server id to collect into cache
+ * @param server - server to collect into cache
  * @param client - reference to the loaded discord client
  * @returns new configured server reference
  */
-export const collectServer = (serverId: string, client: Client): IServer => {
-    if (!serverId)
+export const collectServer = (server: OAuth2Guild, client: Client): IServer => {
+    if (!server?.id)
         return null;
 
-    SERVER_CACHE[serverId] = {
-        id: serverId,
-        clientRef: client
+    SERVER_CACHE[server.id] = {
+        id: server.id,
+        clientRef: client,
+        guild: server
     };
 
-    return SERVER_CACHE[serverId];
+    return SERVER_CACHE[server.id];
 }
 
 /**

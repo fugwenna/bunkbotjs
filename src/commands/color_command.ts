@@ -1,6 +1,8 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
 import { CommandInteraction } from "discord.js";
 
+import { addRoleToMemberAsync, getServerRolesAsync } from "../core";
+
 enum ColorSubCommand {
     Set = "set",
     Clear = "clear",
@@ -17,7 +19,7 @@ const colorAsync = async(interaction: CommandInteraction): Promise<void> => {
 
     switch (subc) {
         case ColorSubCommand.Set:
-            //await setMemberColorRoleAsync(interaction, interaction.content);
+            await setMemberColorRoleAsync(interaction);
             break;
 
         case ColorSubCommand.Clear:
@@ -26,8 +28,6 @@ const colorAsync = async(interaction: CommandInteraction): Promise<void> => {
         case ColorSubCommand.List:
             break;
     }
-
-    await interaction.reply("hlo");
 }
 
 /**
@@ -37,8 +37,17 @@ const colorAsync = async(interaction: CommandInteraction): Promise<void> => {
  * @param {Interaction} interaction - interaction which triggered the command
  * @param {string} color - color the user has entered
  */
-const setMemberColorRoleAsync = async(interaction: CommandInteraction, color: string): Promise<void> => {
-    console.log(color)
+const setMemberColorRoleAsync = async(interaction: CommandInteraction): Promise<void> => {
+    const value = `color-${interaction.options.getString("value")}`;
+    const colorRoles = await getServerRolesAsync(interaction.guildId);
+    const existingRole = colorRoles.find(r => r.name == value);
+
+    if (existingRole) {
+        await addRoleToMemberAsync(interaction.guildId, interaction.member.user.id, existingRole);
+        await interaction.reply(`Color role has been set to ${existingRole.name}`);
+    } else {
+        // todo
+    }
 }
 
 module.exports = {
@@ -47,7 +56,11 @@ module.exports = {
         .setDescription("Manage the color of your user in the server")
         .addSubcommand(x => x
 			.setName(ColorSubCommand.Set)
-			.setDescription("Set your personal color"))
+			.setDescription("Set your personal color")
+            .addStringOption(s => s
+                .setName("value")
+                .setDescription("Color value (hex# or 'blue', 'green', etc)")
+                .setRequired(true)))
         .addSubcommand(x => x
 			.setName(ColorSubCommand.Clear)
 			.setDescription("Clear your personal color")),

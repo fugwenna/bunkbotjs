@@ -50,12 +50,12 @@ export const registerCacheAndCommandsAsync = async(client: Client): Promise<void
         guilds.forEach(g => guildRefs.push(g));
 
         const resolveFnAsync: Function = async(guilds: GuildCollection, index: number): Promise<void> => {
-            const serverId = guildRefs[index]?.id;
-            const server = collectServer(serverId, client);
+            const guild = guildRefs[index];
+            const server = collectServer(guild, client);
 
             try {
                 if (index < serverLength) {
-                    server.config = await getDocByKeyAsync(serverId);
+                    server.config = await getDocByKeyAsync(server.id);
                     await registerCommandsAsync(server);
                     await resolveFnAsync(guilds, index + 1);
                 }

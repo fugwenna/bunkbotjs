@@ -44,9 +44,11 @@ export const getYoutubeVideosAsync = async(interaction: CommandInteraction): Pro
 }
 
 /**
+ * When linking the youtube result, set a select menu of the
+ * next ~10 options from the youtube result
  * 
- * @param result 
- * @returns 
+ * @param {GaxiosResponse<youtube_v3.Schema$SearchListResponse>} result - youtube api result
+ * @returns Select menu action row to embed in the message
  */
 const createOtherVideoMenu = (result: GaxiosResponse<youtube_v3.Schema$SearchListResponse>): MessageActionRow => {
     const row = new MessageActionRow();
