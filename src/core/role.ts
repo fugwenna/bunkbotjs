@@ -36,7 +36,7 @@ export const addRoleToMemberAsync = async(serverId: string, memberId: string, ro
  * 
  * @param {string} serverId - server which to find the member
  * @param {string} memberId - id of the member
- * @param {Role} role  - role which to remove
+ * @param {Role} role - role which to remove
  * @param {boolean} [removeFromServer=false] - optionally remove the role from the server once removed
  */
 export const removeRoleFromMemberAsync = async(serverId: string, memberId: string, 
