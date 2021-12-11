@@ -1,5 +1,5 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
-import { CommandInteraction, MessageEmbed } from "discord.js";
+import { CommandInteraction, GuildMember, MessageEmbed } from "discord.js";
 
 import { logServerErrorAsync } from "../core"
 import { getRandomNumber } from "../tools";
@@ -13,7 +13,7 @@ const rollAsync = async(interaction: CommandInteraction): Promise<void> => {
         const min = interaction.options.getInteger("min");
         const max = interaction.options.getInteger("max");
         const result = getRandomNumber(min, max);
-        const member = <any>interaction.member;
+        const member = <GuildMember>interaction.member;
 
         const embed = new MessageEmbed()
             .setColor(member.displayColor)

@@ -4,7 +4,7 @@
  * that holds a reference to the discord client so that other
  * functions can just pull the instance off of a singleton object
  */
-import { Client, OAuth2Guild } from "discord.js";
+import { Client, Guild, OAuth2Guild } from "discord.js";
 import { DOC_CONFIG, getDocByKeyAsync, IBotCoreConfigDocument, IBotServerConfigDocument } from "../db";
 
 /**
@@ -59,7 +59,7 @@ export const getDefaultServer = (): IServer => {
 }
 
 /**
- * Get the "default" core server (if it exists) 
+ * Get an IServer reference by id
  * 
  * @returns - Optionally configured default server
  */
@@ -69,6 +69,16 @@ export const getServerById = (serverId: string): IServer => {
         .find(s => s._id == serverId);
 
     return SERVER_CACHE[srv?._id];
+}
+
+/**
+ * Get a discord server (guild) by id
+ * 
+ * @param serverId - Server id which to locate 
+ */
+export const getGuildRefById = (serverId: string): Guild => {
+    return getServerById(serverId).clientRef.guilds.cache
+        .find(g => g.id == serverId); // not loving this
 }
 
 /**

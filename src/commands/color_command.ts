@@ -39,7 +39,7 @@ const colorAsync = async(interaction: CommandInteraction): Promise<void> => {
  */
 const setMemberColorRoleAsync = async(interaction: CommandInteraction): Promise<void> => {
     const value = `color-${interaction.options.getString("value")}`;
-    const colorRoles = await getServerRolesAsync(interaction.guildId);
+    const colorRoles = await getServerRolesAsync(interaction.guildId, "color-");
     const existingRole = colorRoles.find(r => r.name == value);
 
     if (existingRole) {

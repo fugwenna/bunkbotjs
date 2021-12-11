@@ -66,8 +66,9 @@ export const registerCacheAndCommandsAsync = async(client: Client): Promise<void
         };
 
         await resolveFnAsync(guilds, 0);
-    } catch (e) {
-        throw e;
+    } catch (error) {
+        logError(`registerCacheCommandsAsync: ${error}`);
+        throw error;
     }
 }
 

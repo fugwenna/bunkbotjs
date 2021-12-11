@@ -1,5 +1,5 @@
 import { Collection, Role } from "discord.js";
-import { getServerById } from "./server";
+import { getServerById, getGuildRefById } from "./server";
 
 /**
  * Get a list of roles for a given server. If a keyword
@@ -26,7 +26,7 @@ export const getServerRolesAsync = async(serverId: string, keywordMatch: string 
  * @param {Role} role - role which to apply to the member
  */
 export const addRoleToMemberAsync = async(serverId: string, memberId: string, role: Role): Promise<void> => {
-    const server = getServerById(serverId).clientRef.guilds.cache.find(g => g.id == serverId); // yuck
+    const server = getGuildRefById(serverId);
     const member = server.members.cache.find(m => m.id == memberId);
     member.roles.add(role);
 }
@@ -42,7 +42,7 @@ export const addRoleToMemberAsync = async(serverId: string, memberId: string, ro
 export const removeRoleFromMemberAsync = async(serverId: string, memberId: string, 
     role: Role, removeFromServer: boolean = false): Promise<void> => {
 
-    const server = getServerById(serverId).clientRef.guilds.cache.find(g => g.id == serverId); // yuck
+    const server = getGuildRefById(serverId);
     const member = server.members.cache.find(m => m.id == memberId);
     member.roles.remove(role);
 
