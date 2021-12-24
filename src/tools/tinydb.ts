@@ -35,12 +35,16 @@ export const main = (): void => {
         if (!dbjson.games) 
             dbjson.games = { gameNames: [] };
 
+        const gameNames: string[] = [];
+
         Object.keys(tinydbjson.game_names).forEach(gn => {
             const gname = tinydbjson.game_names[gn].name;
             logInfo(`Adding game: ${colors.green(gname)}`);
 
-            dbjson.games.gameNames.push(gname);
+            gameNames.push(gname);
         });
+
+        dbjson.games.gameNames = gameNames;
 
         writeJSONFile(dbjsonPath, dbjson);
     } catch(e) {

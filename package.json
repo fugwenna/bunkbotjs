@@ -8,7 +8,8 @@
     "config": "node dist/tools/setup.js",
     "export": "node -e 'require(\"./dist/tools/sync.js\").export()'",
     "load": "node -e 'require(\"./dist/tools/sync.js\").load(\"./db.json\")'",
-    "tiny": "node dist/tools/tinydb.js",
+    "tinydb": "node dist/tools/tinydb.js",
+    "loadtinydb": "node dist/tools/tinydb.js && node -e 'require(\"./dist/tools/sync.js\").load(\"./db.json\")'",
     "bot": "npx tsc && node dist/bunkbot.js"
   },
   "repository": {
