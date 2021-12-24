@@ -73,7 +73,7 @@ export const handleInteractionAsync = async(interaction: Interaction): Promise<v
         const value = interaction.values[0];
         await msg.edit(value);
         await interaction.update({ content: value });
-    } else if (interaction.isCommand()) {
+    } else if (interaction.isCommand() || interaction.isContextMenu()) {
         const commandRef = (<any>interaction.client)
             .commands?.get(interaction.commandName);
 

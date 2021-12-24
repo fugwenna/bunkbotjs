@@ -15,7 +15,7 @@ export const getServerRolesAsync = async(serverId: string, keywordMatch: string 
 
     return keywordMatch == null
         ? roles
-        : roles.filter(r => keywordMatch.indexOf(r.name) > -1);
+        : roles.filter(r => keywordMatch.includes(r.name));
 }
 
 /**
