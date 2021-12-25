@@ -1,13 +1,19 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
-import { CommandInteraction } from "discord.js";
+import { ColorResolvable, CommandInteraction, CreateRoleOptions, GuildMember, Role } from "discord.js";
 
-import { addRoleToMemberAsync, getServerRolesAsync } from "../core";
+import { addRoleToMemberAsync, createRoleAsync, getServerRolesAsync, removeRolesFromMemberAsync } from "../core";
 
 enum ColorSubCommand {
     Set = "set",
     Clear = "clear",
     List = "list"
 }
+
+/**
+ * Max amount of **unique** color roles per
+ * server - max roles for discord is 250
+ */
+const MAX_COLOR_ROLE_COUNT: number = 50;
 
 /**
  * @description
@@ -38,15 +44,37 @@ const colorAsync = async(interaction: CommandInteraction): Promise<void> => {
  * @param {string} color - color the user has entered
  */
 const setMemberColorRoleAsync = async(interaction: CommandInteraction): Promise<void> => {
-    const value = `color-${interaction.options.getString("value")}`;
+    const value = interaction.options.getString("value");
+    const colorValue = `color-${value}`;
     const colorRoles = await getServerRolesAsync(interaction.guildId, "color-");
-    const existingRole = colorRoles.find(r => r.name == value);
+    let roleToAdd: CreateRoleOptions;
 
-    if (existingRole) {
-        await addRoleToMemberAsync(interaction.guildId, interaction.member.user.id, existingRole);
-        await interaction.reply(`Color role has been set to ${existingRole.name}`);
+    if (colorRoles.values.length >= MAX_COLOR_ROLE_COUNT) {
+        await interaction.reply("The max allowed color roles for this guild has been met!");
+        // TODO ... list in a thing?
     } else {
-        // todo
+        roleToAdd = colorRoles.find(r => r.name == colorValue);
+
+        if (!roleToAdd) {
+            let index: number = 1;
+
+            if (colorRoles.values.length > 0)
+                index = Math.min(...colorRoles.map(r => r.position));
+
+            roleToAdd = await createRoleAsync(interaction.guildId, {
+                name: colorValue,
+                position: index,
+                color: <ColorResolvable>value,
+                hoist: true
+            });
+        }
+
+        if (roleToAdd) {
+            await removeRolesFromMemberAsync(<GuildMember>interaction.member, "color-");
+            await addRoleToMemberAsync(interaction.guildId, interaction.member.user.id, <Role>roleToAdd);
+
+            await interaction.reply(`${interaction.member.user.toString()}'s color role has been set to \`${roleToAdd.name}\`!`);
+        }
     }
 }
 
