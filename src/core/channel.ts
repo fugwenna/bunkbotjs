@@ -3,7 +3,7 @@
  * Channel functions that are primarily used for
  * sending logs to a configured channel 
  */
-import { GuildChannel } from "discord.js";
+import { GuildChannel, MessageEmbed } from "discord.js";
 import { EMOJI_EXCLAMATION } from "./constants";
 import { getServerById, IServer } from "./server";
 import { logError } from "../db";
@@ -35,6 +35,26 @@ export const sendToChannelAsync = async(server: IServer, channelName: string, ms
 
     if (channel) {
         await channel.send(msg);
+    } else {
+        await logErrorAsync(server, `Unable to send message to channel: ${channelName}`);
+        return false;
+    }
+
+    return true;
+}
+
+/**
+ * Send a message to a specific server channel
+ * 
+ * @param {IServer} server - server which to send the message
+ * @param {string} channelName - channel which to send the message
+ * @param {MessageEmbed} embed - embedded message to send
+ */
+export const sendEmbedToChannelAsync = async(server: IServer, channelName: string, embed: MessageEmbed): Promise<boolean> => {
+    const channel: any = getServerChannel(server, channelName);
+
+    if (channel) {
+        await channel.send({ embeds: [embed] });
     } else {
         await logErrorAsync(server, `Unable to send message to channel: ${channelName}`);
         return false;

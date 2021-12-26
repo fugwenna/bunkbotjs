@@ -1,4 +1,6 @@
-import { CreateRoleOptions, GuildMember, GuildMemberRoleManager, Role } from "discord.js";
+import { CreateRoleOptions, GuildMember, GuildMemberRoleManager, MessageEmbed, Role } from "discord.js";
+
+import { logInfoAsync, sendEmbedToChannelAsync } from "./channel";
 import { getServerById, getGuildRefById } from "./server";
 
 /**
@@ -42,30 +44,45 @@ export const addRoleToMemberAsync = async(serverId: string, memberId: string, ro
 }
 
 /**
- * Remove a role for a given member of a server
+ * Remove a set of roles matching a keyword for a given member of a server
  * 
  * @param {GuildMember} member - member which to remove roles
- * @param {string} [keywordMatch=null] - optionally match role names on a keyword
+ * @param {string} keyword - optionally match role names on a keyword
+ * @param {boolean} [exactKeywordMatch=false] - require an exact match on keyword
  * @param {boolean} [removeFromServer=false] - optionally remove the role from the server once removed
  */
-export const removeRolesFromMemberAsync = async(member: GuildMember, 
-    keywordMatch: string = null, removeFromServer: boolean = false): Promise<void> => {
+export const removeRolesFromMemberAsync = async(member: GuildMember, keyword: string, 
+    exactKeywordMatch: boolean = false,
+    removeFromServer: boolean = false): Promise<void> => {
 
     const memberRoles = <GuildMemberRoleManager>member.roles;
-    const rolesToRemove = memberRoles.cache.filter(r => r.name.includes("color-")).map(r => r);
+    const rolesToRemove = memberRoles.cache.filter(r => r.name.includes(keyword)).map(r => r);
+    const srv = getServerById(member.guild.id);
 
     rolesToRemove.forEach(role => {
-        if (keywordMatch) {
-            if (role.name.includes(keywordMatch))
-                member.roles.remove(role);
-        } else {
+        let remove: boolean = true;
+
+        if (keyword) {
+            remove = exactKeywordMatch
+                ? role.name == keyword
+                : role.name.includes(keyword);
+        } 
+
+        if (remove) {
             member.roles.remove(role);
+            logInfoAsync(srv, `Removing role \`${role.name}\` from user ${member.user.username}`);
+
+            if (removeFromServer && role.members.map(m => m).length <= 1) {
+                const embed = new MessageEmbed()
+                    .setColor(role.color)
+                    .setTitle("Role Removed")
+                    .setDescription(`Removing role \`${role.name}\` from server`)
+
+                sendEmbedToChannelAsync(srv, srv.config?.channels?.log, embed);
+                role.delete();
+            }
         }
     });
-
-    if (removeFromServer) {
-        // hmm ... 
-    }
 }
 
 /**
@@ -74,14 +91,17 @@ export const removeRolesFromMemberAsync = async(member: GuildMember,
  * @param {string} serverId - server which to create the role
  * @param {Role} role - new role to create
  * @param {number} [position=1] - optional position, default 1
+ * @returns newly created role
  */
 export const createRoleAsync = async(serverId: string, role: CreateRoleOptions, position: number = 1): Promise<Role> => {
+    const srv = getServerById(serverId);
     const guild = getGuildRefById(serverId);
 
     if (!role.position)
         role.position = position;
 
     const newRole = await guild.roles.create(role);
+    await logInfoAsync(srv, `Created new role: ${role.name}`);
 
     return newRole;
 }

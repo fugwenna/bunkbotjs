@@ -29,6 +29,7 @@ const colorAsync = async(interaction: CommandInteraction): Promise<void> => {
             break;
 
         case ColorSubCommand.Clear:
+            await clearMemberColorRoleAsync(interaction);
             break;
 
         case ColorSubCommand.List:
@@ -64,18 +65,28 @@ const setMemberColorRoleAsync = async(interaction: CommandInteraction): Promise<
             roleToAdd = await createRoleAsync(interaction.guildId, {
                 name: colorValue,
                 position: index,
-                color: <ColorResolvable>value,
+                color: <ColorResolvable>value.toUpperCase(),
                 hoist: true
             });
         }
 
         if (roleToAdd) {
-            await removeRolesFromMemberAsync(<GuildMember>interaction.member, "color-");
+            await removeRolesFromMemberAsync(<GuildMember>interaction.member, "color-", false, true);
             await addRoleToMemberAsync(interaction.guildId, interaction.member.user.id, <Role>roleToAdd);
 
             await interaction.reply(`${interaction.member.user.toString()}'s color role has been set to \`${roleToAdd.name}\`!`);
         }
     }
+}
+
+/**
+ * Clear a color role from a guild member
+ * 
+ * @param {Interaction} interaction - interaction which triggered the command
+ */
+const clearMemberColorRoleAsync = async(interaction: CommandInteraction): Promise<void> => {
+    await removeRolesFromMemberAsync(<GuildMember>interaction.member, "color-", true, true);
+    await interaction.reply(`${interaction.member.user.toString()}'s color role has been cleared!`);
 }
 
 module.exports = {
